@@ -121,6 +121,7 @@ class JiraImporter(object):
             return json.loads(fd.read())
 
     def asana_project_task_metadata(self, p, t):
+        #the task metadata is stored deeper than the tasks.json at the top level used for the rest of this program
         with open(os.path.join(p, 'tasks', t, 'task.json')) as fd:
             return json.loads(fd.read())
 
@@ -137,6 +138,7 @@ class JiraImporter(object):
             self.jira.add_comment(subtask, annotated_comment)
 
     def asana_task_creator(self, p, t):
+        #asana stores the creator as a comment, sometimes there are system comments without a name before the creator comment so we iterate through till we find the first named comment
         with open(os.path.join(p, 'tasks', t, 'stories.json')) as fd:
             fd = json.loads(fd.read())
             creator = 'false'
