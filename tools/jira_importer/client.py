@@ -107,8 +107,11 @@ class JiraImporter(object):
         with open(os.path.join(p, 'tasks.json')) as fd:
             return json.loads(fd.read())
 
+    def asana_subtask_metadata(self, p):
+        with open(os.path.join())
+
     def asana_project_task_subtasks(self, p, t):
-        with open(os.path.join(p, 'tasks', t['gid'], 'subtasks.json')) as fd:
+        with open(os.path.join(p, 'tasks', t['gid'], 'task.json')) as fd:
             return json.loads(fd.read())
 
     def add_comments_to_subtask(self, subtask, ppath, at, ast=None):
