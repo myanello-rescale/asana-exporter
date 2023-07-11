@@ -72,6 +72,16 @@ class JiraImporter(object):
                       format(at['gid']))
             return []
 
+    # def asana_task_creator(self, ppath, at, ast)
+    #     if ast:
+    #         spath = os.path.join(ppath, 'tasks', at['gid'], 'subtasks', ast['gid'], 'stories.json')
+    #     else:
+    #         spath = os.path.join(ppath, 'tasks', at['gid'], 'stories.json')
+    #     if not os.path.exists(spath):
+    #         LOG.debug(asana task '{}' has no stories to import".
+    #                   format(at['gid']))
+    #         return []
+
         with open(spath) as fd:
             return json.loads(fd.read())
 
@@ -125,6 +135,16 @@ class JiraImporter(object):
                      format(story['text'][:20]))
             annotated_comment = f"[{story['created_by']['name']}  {story['created_at']}]\n{story['text']}"
             self.jira.add_comment(subtask, annotated_comment)
+
+    def asana_task_creator(self, p, t):
+        with open(os.path.join(p, 'tasks', t, 'stories.json')) as fd:
+            fd = json.loads(fd.read())
+            creator = 'false'
+            while creator == 'empty':
+                for story in fd:
+                    if story['created_by']['name']:
+                        creator = story['created_by']['name']
+                    return(creator)
 
     def add_attachments_to_subtask(self, subtask, ppath, at, ast=None):
         attachments = self.asana_task_attachments(ppath, at, ast)
@@ -288,9 +308,10 @@ class JiraImporter(object):
             if create:
                 LOG.info("creating subtask '{}'". format(summary))
                 metadata = self.asana_project_task_metadata(ppath, at['gid'])
+                creator = self.asana_task_creator(ppath, at['gid'])
                 subtask = self.jira.create_issue(
                                             project=self.project.key,
-                                            description=f"[{desc}]\n{metadata['permalink_url']}\n {metadata['notes']}",
+                                            description=f"[{desc}]\n[Created by {creator} on {metadata['created_at']}]\n{metadata['permalink_url']}\n{metadata['notes']}",
                                             summary=summary,
                                             issuetype={'name': 'Sub-task'},
                                             parent={'key': task.key})
