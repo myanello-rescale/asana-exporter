@@ -107,11 +107,8 @@ class JiraImporter(object):
         with open(os.path.join(p, 'tasks.json')) as fd:
             return json.loads(fd.read())
 
-    def asana_subtask_metadata(self, p):
-        with open(os.path.join())
-
-    def asana_project_task_subtasks(self, p, t):
-        with open(os.path.join(p, 'tasks', t['gid'], 'task.json')) as fd:
+    def asana_project_task_metadata(self, p, t):
+        with open(os.path.join(p, 'tasks', t, 'task.json')) as fd:
             return json.loads(fd.read())
 
     def add_comments_to_subtask(self, subtask, ppath, at, ast=None):
@@ -287,7 +284,9 @@ class JiraImporter(object):
 
             if create:
                 LOG.info("creating subtask '{}'". format(summary))
-                LOG.info(asana_tasks)
+                LOG.info(ppath)
+                notes = self.asana_project_task_metadata(ppath, at['gid'])
+                LOG.info(notes)
                 subtask = self.jira.create_issue(
                                             project=self.project.key,
  #                                           description=f"[{desc}] {at['notes']}",
