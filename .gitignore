@@ -1,3 +1,7 @@
 asana_export
 asana_exporter.egg-info
+build
 dist
+rescale
+env
+venv
