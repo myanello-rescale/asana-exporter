@@ -22,7 +22,7 @@ class JiraImporter(object):
         self.project_include_filter = project_include_filter
         self.project_exclude_filter = project_exclude_filter
         self.import_label = import_label
-        self._jira = JIRA(server="https://warthogs.atlassian.net",
+        self._jira = JIRA(server="https://marcusyanello.atlassian.net",
                           basic_auth=(auth_email,
                                       auth_token))
 
@@ -120,7 +120,8 @@ class JiraImporter(object):
 
             LOG.info("adding comment to subtask: '{}...'".
                      format(story['text'][:20]))
-            self.jira.add_comment(subtask, story['text'])
+            annotated_comment = f"[{story['created_by']['name']}  {story['created_at']}]\n{story['text']}"
+            self.jira.add_comment(subtask, annotated_comment)
 
     def add_attachments_to_subtask(self, subtask, ppath, at, ast=None):
         attachments = self.asana_task_attachments(ppath, at, ast)
@@ -254,7 +255,6 @@ class JiraImporter(object):
                             "are to be modified - task '{}' is in state '{}' "
                             "- ignoring task".
                             format(task.fields.summary, current_status))
-                return
 
         LOG.debug("importing {} tasks to '{}'".format(len(asana_tasks), pname))
         existing_subtasks = task.fields.subtasks
@@ -284,9 +284,11 @@ class JiraImporter(object):
 
             if create:
                 LOG.info("creating subtask '{}'". format(summary))
+                LOG.info(asana_tasks)
                 subtask = self.jira.create_issue(
                                             project=self.project.key,
-                                            description=desc,
+ #                                           description=f"[{desc}] {at['notes']}",
+                                            description=f"[{desc}]",
                                             summary=summary,
                                             issuetype={'name': 'Sub-task'},
                                             parent={'key': task.key})
