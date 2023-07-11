@@ -287,12 +287,10 @@ class JiraImporter(object):
 
             if create:
                 LOG.info("creating subtask '{}'". format(summary))
-                LOG.info(ppath)
                 metadata = self.asana_project_task_metadata(ppath, at['gid'])
-                LOG.info(metadata)
                 subtask = self.jira.create_issue(
                                             project=self.project.key,
-                                            description=f"[{desc}] {metadata['notes']}",
+                                            description=f"[{desc}]\n{metadata['permalink_url']}\n {metadata['notes']}",
                                             summary=summary,
                                             issuetype={'name': 'Sub-task'},
                                             parent={'key': task.key})
