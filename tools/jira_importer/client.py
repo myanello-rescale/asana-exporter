@@ -72,16 +72,6 @@ class JiraImporter(object):
                       format(at['gid']))
             return []
 
-    # def asana_task_creator(self, ppath, at, ast)
-    #     if ast:
-    #         spath = os.path.join(ppath, 'tasks', at['gid'], 'subtasks', ast['gid'], 'stories.json')
-    #     else:
-    #         spath = os.path.join(ppath, 'tasks', at['gid'], 'stories.json')
-    #     if not os.path.exists(spath):
-    #         LOG.debug(asana task '{}' has no stories to import".
-    #                   format(at['gid']))
-    #         return []
-
         with open(spath) as fd:
             return json.loads(fd.read())
 
@@ -141,7 +131,7 @@ class JiraImporter(object):
         #asana stores the creator as a comment, sometimes there are system comments without a name before the creator comment so we iterate through till we find the first named comment
         with open(os.path.join(p, 'tasks', t, 'stories.json')) as fd:
             fd = json.loads(fd.read())
-            creator = 'false'
+            creator = 'empty'
             while creator == 'empty':
                 for story in fd:
                     if story['created_by']['name']:
