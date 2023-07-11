@@ -106,6 +106,8 @@ class JiraImporter(object):
     def asana_project_tasks(self, p):
         with open(os.path.join(p, 'tasks.json')) as fd:
             return json.loads(fd.read())
+    def asana_project_task_subtasks(self, p, t):
+        with open(os.path.join(p, 'tasks', t['gid'], 'subtasks.json')) as fd:
 
     def asana_project_task_metadata(self, p, t):
         with open(os.path.join(p, 'tasks', t, 'task.json')) as fd:
