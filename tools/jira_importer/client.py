@@ -131,12 +131,12 @@ class JiraImporter(object):
         #asana stores the creator as a comment, sometimes there are system comments without a name before the creator comment so we iterate through till we find the first named comment
         with open(os.path.join(p, 'tasks', t, 'stories.json')) as fd:
             fd = json.loads(fd.read())
-            creator = 'empty'
-            while creator == 'empty':
+            creator = ''
+            while not creator:
                 for story in fd:
-                    if story['created_by']['name']:
-                        creator = story['created_by']['name']
-                    return(creator)
+                    if 'name' in story['created_by']:
+                        return story['created_by']['name']
+                return('empty')
 
     def add_attachments_to_subtask(self, subtask, ppath, at, ast=None):
         attachments = self.asana_task_attachments(ppath, at, ast)
