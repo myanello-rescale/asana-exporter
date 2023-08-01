@@ -134,9 +134,12 @@ class JiraImporter(object):
             creator = ''
             while not creator:
                 for story in fd:
-                    if 'name' in story['created_by']:
-                        return story['created_by']['name']
-                return('empty')
+                    print(story)
+                    if story['created_by']:
+                        if 'name' in story['created_by']:
+                            return story['created_by']['name']
+                        return('empty')
+                    return('empty')
 
     def add_attachments_to_subtask(self, subtask, ppath, at, ast=None):
         attachments = self.asana_task_attachments(ppath, at, ast)
