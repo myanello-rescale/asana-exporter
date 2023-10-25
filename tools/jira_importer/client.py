@@ -117,11 +117,23 @@ class JiraImporter(object):
 
     def add_comments_to_subtask(self, subtask, ppath, at, ast=None):
         for story in self.asana_task_stories(ppath, at, ast):
+            #print(f"{story}")
+            if not story:
+                LOG.debug("skipping nonetype story (story gid={})".
+                          format(story['gid']))
+                continue
             if not story['text']:
                 LOG.debug("skipping comment with empty body (story gid={})".
                           format(story['gid']))
                 continue
-
+            if not story['created_at']:
+                LOG.debug("skipping comment with empty creation date (story gid={})"
+                          .format(story['gid']))
+                continue
+            if not story['created_by']:
+                LOG.debug("skipping comment with empty created by name (story gid={})"
+                          .format(story['gid']))
+                continue
             LOG.info("adding comment to subtask: '{}...'".
                      format(story['text'][:20]))
             annotated_comment = f"[{story['created_by']['name']}  {story['created_at']}]\n{story['text']}"
