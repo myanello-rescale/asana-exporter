@@ -72,3 +72,7 @@ List all extracted tasks for a given project:
 asana-exporter --token TOKEN --workspace WORKSPACE --export-path EXPORT_PATH --team "My Team" --list-project-tasks "My Project"
 ```
 
+Upload to $IMPORT_FILTER Asana project to $PROJECT jira project:
+```
+python tools/jira_importer/client.py --token $JIRA --email $EMAIL --asana-team $TEAM --jira-project $PROJECT --project-filter $IMPORT_FILTER --export-path ./rescale --debug > log.txt 2>&1
+```
